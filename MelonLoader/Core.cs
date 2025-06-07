@@ -199,11 +199,16 @@ namespace MelonLoader
 
 #if NET6_0_OR_GREATER
             Fixes.AsmResolverFix.Install();
-            Fixes.Il2CppInteropFixes.Install();
-            Fixes.Il2CppICallInjector.Install();
+            Fixes.Il2CppInteropExceptionLog.Install();
+
 #if OSX
+            Fixes.Il2CppInteropMacFix.Install();
             Fixes.NativeLibraryFix.Install();
 #endif
+
+            //Fixes.Il2CppInteropFixes.Install();
+
+            Fixes.Il2CppICallInjector.Install();
 #endif
 
             PatchShield.Install();
@@ -315,7 +320,7 @@ namespace MelonLoader
             bHapticsManager.Disconnect();
 
 #if NET6_0_OR_GREATER
-            Fixes.Il2CppInteropFixes.Shutdown();
+            //Fixes.Il2CppInteropFixes.Shutdown();
             Fixes.Il2CppICallInjector.Shutdown();
 #endif
 
