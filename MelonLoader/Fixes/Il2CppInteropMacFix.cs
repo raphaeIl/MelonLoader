@@ -29,7 +29,7 @@ namespace MelonLoader.Fixes
         {
             try
             {
-                Type thisType = typeof(Il2CppInteropFixes);
+                Type thisType = typeof(Il2CppInteropMacFix);
                 Type classInjectorType = typeof(ClassInjector);
 
                 Type injectorHelpersType = classInjectorType.Assembly.GetType("Il2CppInterop.Runtime.Injection.InjectorHelpers");

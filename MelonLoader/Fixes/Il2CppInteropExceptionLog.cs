@@ -30,7 +30,7 @@ namespace MelonLoader.Fixes
         {
             try
             {
-                Type thisType = typeof(Il2CppInteropFixes);
+                Type thisType = typeof(Il2CppInteropExceptionLog);
                 Type harmonySupportType = typeof(HarmonySupport);
 
                 Type detourMethodPatcherType = harmonySupportType.Assembly.GetType("Il2CppInterop.HarmonySupport.Il2CppDetourMethodPatcher");
