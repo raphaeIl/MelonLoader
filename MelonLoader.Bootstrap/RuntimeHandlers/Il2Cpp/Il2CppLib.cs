@@ -28,31 +28,67 @@ internal class Il2CppLib(Il2CppLib.MethodGetNameFn methodGetName)
 
         MelonLogger.LogWarning($"Successfully Loaded {libName} - Address: 0x{hRuntime.ToInt64():X}");
 
+        // il2cpp_init
         if (!NativeLibrary.TryGetExport(hRuntime, "il2cpp_init", out var initPtr))
         {
-            MelonLogger.LogError($"Load il2cpp_init failed.");
-            MelonLogger.LogWarning($"Now Attempting Custom Load");
+            MelonLogger.LogError($"[il2cpp_init] Failed to locate export using original name.");
+            MelonLogger.LogWarning($"[il2cpp_init] Attempting fallback using NameTranslations mapping...");
 
             if (!NativeLibrary.TryGetExport(hRuntime, NameTranslations.NameMappings["il2cpp_init"], out initPtr))
             {
-                MelonLogger.LogError($"Load il2cpp_init failed.");
+                MelonLogger.LogError($"[il2cpp_init] Failed to locate export using NameTranslations fallback: {NameTranslations.NameMappings["il2cpp_init"]}");
                 return null;
             } else
             {
-                MelonLogger.LogWarning($"Successfully Loaded il2cpp_init -> {NameTranslations.NameMappings["il2cpp_init"]} - Address: 0x{hRuntime.ToInt64():X}");
+                MelonLogger.LogWarning($"[il2cpp_init] Successfully resolved using NameTranslations.");
+                MelonLogger.LogWarning($"[il2cpp_init] Resolved name: {NameTranslations.NameMappings["il2cpp_init"]}");
+                MelonLogger.LogWarning($"[il2cpp_init] Export address: 0x{initPtr.ToInt64():X}");
             }
+        } else
+        {
+            MelonLogger.LogWarning($"[il2cpp_init] Successfully located export at: 0x{initPtr.ToInt64():X}");
         }
 
+        // il2cpp_runtime_invoke
         if (!NativeLibrary.TryGetExport(hRuntime, "il2cpp_runtime_invoke", out var runtimeInvokePtr))
         {
-            MelonLogger.LogError($"Load il2cpp_runtime_invoke failed.");
-            return null;
+            MelonLogger.LogError($"[il2cpp_runtime_invoke] Failed to locate export using original name.");
+            MelonLogger.LogWarning($"[il2cpp_runtime_invoke] Attempting fallback using NameTranslations mapping...");
+
+            if (!NativeLibrary.TryGetExport(hRuntime, NameTranslations.NameMappings["il2cpp_runtime_invoke"], out runtimeInvokePtr))
+            {
+                MelonLogger.LogError($"[il2cpp_runtime_invoke] Failed to locate export using NameTranslations fallback: {NameTranslations.NameMappings["il2cpp_runtime_invoke"]}");
+                return null;
+            } else
+            {
+                MelonLogger.LogWarning($"[il2cpp_runtime_invoke] Successfully resolved using NameTranslations.");
+                MelonLogger.LogWarning($"[il2cpp_runtime_invoke] Resolved name: {NameTranslations.NameMappings["il2cpp_runtime_invoke"]}");
+                MelonLogger.LogWarning($"[il2cpp_runtime_invoke] Export address: 0x{runtimeInvokePtr.ToInt64():X}");
+            }
+        } else
+        {
+            MelonLogger.LogWarning($"[il2cpp_runtime_invoke] Successfully located export at: 0x{runtimeInvokePtr.ToInt64():X}");
         }
 
+        // il2cpp_method_get_name
         if (!NativeFunc.GetExport<MethodGetNameFn>(hRuntime, "il2cpp_method_get_name", out var methodGetName))
         {
-            MelonLogger.LogError($"Load il2cpp_method_get_name failed.");
-            return null;
+            MelonLogger.LogError($"[il2cpp_method_get_name] Failed to locate export using original name.");
+            MelonLogger.LogWarning($"[il2cpp_method_get_name] Attempting fallback using NameTranslations mapping...");
+
+            if (!NativeFunc.GetExport<MethodGetNameFn>(hRuntime, NameTranslations.NameMappings["il2cpp_method_get_name"], out methodGetName))
+            {
+                MelonLogger.LogError($"[il2cpp_method_get_name] Failed to locate export using NameTranslations fallback: {NameTranslations.NameMappings["il2cpp_method_get_name"]}");
+                return null;
+            } else
+            {
+                MelonLogger.LogWarning($"[il2cpp_method_get_name] Successfully resolved using NameTranslations.");
+                MelonLogger.LogWarning($"[il2cpp_method_get_name] Resolved name: {NameTranslations.NameMappings["il2cpp_method_get_name"]}");
+                MelonLogger.LogWarning($"[il2cpp_method_get_name] Delegate created at function pointer.");
+            }
+        } else
+        {
+            MelonLogger.LogWarning($"[il2cpp_method_get_name] Successfully located export and created delegate.");
         }
 
         return new(methodGetName)
