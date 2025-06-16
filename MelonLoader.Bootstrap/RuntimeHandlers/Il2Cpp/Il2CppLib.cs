@@ -31,7 +31,16 @@ internal class Il2CppLib(Il2CppLib.MethodGetNameFn methodGetName)
         if (!NativeLibrary.TryGetExport(hRuntime, "il2cpp_init", out var initPtr))
         {
             MelonLogger.LogError($"Load il2cpp_init failed.");
-            return null;
+            MelonLogger.LogWarning($"Now Attempting Custom Load");
+
+            if (!NativeLibrary.TryGetExport(hRuntime, NameTranslations.NameMappings["il2cpp_init"], out initPtr))
+            {
+                MelonLogger.LogError($"Load il2cpp_init failed.");
+                return null;
+            } else
+            {
+                MelonLogger.LogWarning($"Successfully Loaded il2cpp_init -> {NameTranslations.NameMappings["il2cpp_init"]} - Address: 0x{hRuntime.ToInt64():X}");
+            }
         }
 
         if (!NativeLibrary.TryGetExport(hRuntime, "il2cpp_runtime_invoke", out var runtimeInvokePtr))
@@ -44,17 +53,6 @@ internal class Il2CppLib(Il2CppLib.MethodGetNameFn methodGetName)
         {
             MelonLogger.LogError($"Load il2cpp_method_get_name failed.");
             return null;
-        }
-
-        MelonLogger.LogWarning($"Attempting Custom Load");
-
-        if (!NativeLibrary.TryGetExport(hRuntime, NameTranslations.NameMappings["il2cpp_init"], out initPtr))
-        {
-            MelonLogger.LogError($"Load il2cpp_init failed.");
-            return null;
-        } else
-        {
-            MelonLogger.LogWarning($"Successfully Loaded il2cpp_init -> {NameTranslations.NameMappings["il2cpp_init"]} - Address: 0x{hRuntime.ToInt64():X}");
         }
 
         return new(methodGetName)
